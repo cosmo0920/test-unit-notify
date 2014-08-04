@@ -192,13 +192,27 @@ module Test
         def run(parameters)
           title = parameters[:title]
           message = parameters[:message]
+          image = parameters[:icon] if marvericks_or_later?
 
           command_line = [
             @command,
             "-title", title,
             "-message", message,
           ]
+          command_line.concat(["-appIcon", "#{image.to_s}"]) if marvericks_or_later? && image
           system(*command_line)
+        end
+
+        private
+        def marvericks_or_later?
+          version = `uname -r`
+          mountain_lion_kernel_release = 12
+
+          if version.to_i > mountain_lion_kernel_release
+            true
+          else
+            false
+          end
         end
       end
 
